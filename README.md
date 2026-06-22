@@ -15,8 +15,8 @@ A high-performance Movie Booking API built with FastAPI, PostgreSQL, and Redis.
 - Docker
 
 ## Deployment
-Deployed on Render. Access the API documentation here: [Insert your Render URL]/docs
+Deployed on Render. Access the API documentation here: https://movie-api-5jid.onrender.com/docs
 
 ## Internship Experience
 Automated database-intensive tasks using Python, significantly reducing processing time. 
-(Add your specific Dell metrics here).
+Worked on large-scale test infrastructure for an enterprise data-protection platform, including a Python version migration across thousands of tests and a small Flask-based REST API for an internal triage too
