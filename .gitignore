@@ -1,3 +1,14 @@
-.env
+# Python environment
 .venv/
+env/
+venv/
+
+# Compiled files
 __pycache__/
+*.pyc
+
+# Secrets
+.env
+
+# Backup
+backup_2026-06-22_16-54-14.sql
