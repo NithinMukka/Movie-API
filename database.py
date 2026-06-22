@@ -1,9 +1,20 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
+from pydantic_settings import BaseSettings
+import os
 
-# Format: postgresql://<username>:<password>@localhost/<dbname>
-# If using Neon.tech, paste your provided connection string here.
-SQLALCHEMY_DATABASE_URL = "postgresql://neondb_owner:npg_i1SGmv3azwOH@ep-royal-dew-aq9ups96.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+class Settings(BaseSettings):
+    database_url: str
+    redis_url: str
+
+    class Config:
+        env_file = ".env"
+
+# Create a settings instance
+settings = Settings()
+
+# Now use it!
+SQLALCHEMY_DATABASE_URL = settings.database_url
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

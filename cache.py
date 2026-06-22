@@ -1,9 +1,19 @@
 import redis
+from pydantic_settings import BaseSettings
+import os
 
-# Use the 'rediss://' URL provided by your Upstash Dashboard
-# Notice it's rediss (with two s's) for SSL
-redis_url = "rediss://default:gQAAAAAAAbTHAAIgcDJiMGI3MDEzZDU1MGQ0ZWVmOTJhYWNiYjU3Y2QzNzE5MA@precious-swift-111815.upstash.io:6379"
+class Settings(BaseSettings):
+    database_url: str
+    redis_url: str
 
+    class Config:
+        env_file = ".env"
+
+# Create a settings instance
+settings = Settings()
+
+# Now use it!
+redis_url = settings.redis_url
 # We use from_url to handle the connection string automatically
 redis_client = redis.from_url(redis_url, decode_responses=True)
 
