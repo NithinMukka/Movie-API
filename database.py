@@ -1,17 +1,8 @@
+# pyrefly: ignore [missing-import]
 from sqlalchemy import create_engine
+# pyrefly: ignore [missing-import]
 from sqlalchemy.orm import declarative_base, sessionmaker
-from pydantic_settings import BaseSettings
-import os
-
-class Settings(BaseSettings):
-    database_url: str
-    redis_url: str
-
-    class Config:
-        env_file = ".env"
-
-# Create a settings instance
-settings = Settings()
+from config import settings
 
 # Now use it!
 SQLALCHEMY_DATABASE_URL = settings.database_url

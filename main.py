@@ -1,9 +1,10 @@
 from fastapi import FastAPI, Depends, HTTPException
+# pyrefly: ignore [missing-import]
 from sqlalchemy.orm import Session
 import models, schemas
 from database import engine, get_db
 import json
-from cache import get_cache, set_cache, redis_client
+from cache import get_cache, set_cache, invalidate_movie_cache
 
 # Create all tables in the database (automatically)
 models.Base.metadata.create_all(bind=engine)
@@ -20,7 +21,7 @@ def create_movie(movie: schemas.MovieCreate, db: Session = Depends(get_db)):
     db_movie = models.Movie(**movie.dict())
     db.add(db_movie)
     db.commit()
-    redis_client.flushdb()
+    invalidate_movie_cache()
     # db.refresh(db_movie)
     return db_movie
 
@@ -69,6 +70,7 @@ def update_movie(movie_id: int, movie_data: schemas.MovieCreate, db: Session = D
         
     db.commit()
     db.refresh(movie)
+    invalidate_movie_cache()
     return movie
 
 # 5. DELETE: Remove a movie
@@ -80,4 +82,5 @@ def delete_movie(movie_id: int, db: Session = Depends(get_db)):
     
     db.delete(movie)
     db.commit()
+    invalidate_movie_cache()
     return {"message": "Movie deleted successfully"}

@@ -1,16 +1,5 @@
 import redis
-from pydantic_settings import BaseSettings
-import os
-
-class Settings(BaseSettings):
-    database_url: str
-    redis_url: str
-
-    class Config:
-        env_file = ".env"
-
-# Create a settings instance
-settings = Settings()
+from config import settings
 
 # Now use it!
 redis_url = settings.redis_url
@@ -30,3 +19,12 @@ def set_cache(key, value, expire=60):
         redis_client.setex(key, expire, json.dumps(value))
     except Exception as e:
         print(f"Cache Error: {e}")
+
+def invalidate_movie_cache():
+    try:
+        # Scan and delete keys matching 'movies_*' to prevent full database flush
+        for key in redis_client.scan_iter("movies_*"):
+            redis_client.delete(key)
+        print("Invalidated cached movie data.")
+    except Exception as e:
+        print(f"Cache Invalidation Error: {e}")
