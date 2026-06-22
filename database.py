@@ -4,10 +4,18 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
 from config import settings
 
-# Now use it!
+
+# Your URL should now look like: 
+# postgresql+asyncpg://user:password@host/db
 DATABASE_URL = settings.database_url
 
-engine = create_async_engine(DATABASE_URL, echo=True)
+# CHANGE THIS PART:
+# asyncpg uses 'ssl' instead of 'sslmode'
+engine = create_async_engine(
+    DATABASE_URL, 
+    echo=True,
+    connect_args={"ssl": "require"} 
+)
 
 SessionLocal = sessionmaker(
     bind=engine, 
@@ -20,4 +28,4 @@ Base = declarative_base()
 async def get_db():
     async with SessionLocal() as session:
         yield session
-        await session.commit()
+        # Note: We commit inside the endpoints, not here!
