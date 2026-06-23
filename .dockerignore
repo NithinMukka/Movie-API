@@ -1,0 +1,18 @@
+# Ignore local python virtual environments
+.venv/
+venv/
+env/
+
+# Ignore compiled python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore local configs and Git history
+.git/
+.github/
+.env
+.gitignore
+backup_*.sql
+updated_codebase_analysis.md
