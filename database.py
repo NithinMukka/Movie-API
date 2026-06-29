@@ -26,6 +26,11 @@ SessionLocal = sessionmaker(
 Base = declarative_base()
 
 async def get_db():
+    # We commit inside the endpoints, not here. On any error, roll back the
+    # session so a half-applied transaction is never left open.
     async with SessionLocal() as session:
-        yield session
-        # Note: We commit inside the endpoints, not here!
+        try:
+            yield session
+        except Exception:
+            await session.rollback()
+            raise

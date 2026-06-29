@@ -16,3 +16,12 @@ __pycache__/
 .gitignore
 backup_*.sql
 updated_codebase_analysis.md
+
+# Testing
+pytest.ini
+.pytest_cache/
+tests/
+
+# IDE
+.vscode/
+.idea/
