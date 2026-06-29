@@ -138,10 +138,18 @@ async def read_movies(skip: int = 0, limit: int = 10, db: AsyncSession = Depends
 
 @app.get("/movies/{movie_id}", response_model=schemas.MovieResponse)
 async def read_movie(movie_id: int, db: AsyncSession = Depends(get_db)):
+    cache_key = f"movies_id_{movie_id}"
+    cached = get_cache(cache_key)
+    if cached:
+        return json.loads(cached)
+
     result = await db.execute(select(models.Movie).filter(models.Movie.id == movie_id))
     movie = result.scalars().first()
     if not movie:
         raise HTTPException(status_code=404, detail="Movie not found")
+
+    movie_dict = {"id": movie.id, "title": movie.title, "description": movie.description, "duration_mins": movie.duration_mins}
+    set_cache(cache_key, movie_dict)
     return movie
 
 
